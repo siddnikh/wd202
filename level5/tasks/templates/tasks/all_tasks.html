@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - All</title>
+</head>
+<body>
+    <h1>Pending Tasks</h1>
+    <br>
+    {% for task in pending %} {{forloop.counter}}. {{task}}
+    <br>
+    {% endfor %}
+    <h1>Completed Tasks:</h1>
+    {% for task in completed %} {{forloop.counter}}. {{task}}
+    <br>
+    {% endfor %}
+    <br>
+    <a href="/tasks">Return to viewing or adding tasks</a>
+</body>
+</html>
