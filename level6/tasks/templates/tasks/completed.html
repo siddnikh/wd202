@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Completed</title>
+</head>
+<body>
+    <h1>Completed Tasks</h1>
+    <br>
+    {% for task in completed %} {{forloop.counter}}. {{task}}
+    <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
+    <br>
+    {% endfor %}
+    {% if not avaialable %}
+    <p>No tasks completed yet.</p>
+    {% endif %}
+    <a href="/tasks/">Return to viewing or adding tasks</a>
+</body>
+</html>

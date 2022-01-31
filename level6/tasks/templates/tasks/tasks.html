@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Pending or Add</title>
+</head>
+<body>
+    <h1>Tasks</h1>
+    <h4>Add Task:</h4>
+    <form method="POST" action = "/add-task"/>
+        <input type="text" name = "task"> <input type="submit" value="Submit">
+        {% csrf_token %}
+    </form>
+    <br>
+    <h3>Search for a particular task:</h3>
+    <form method="get" action = "/tasks/"/>
+        <input type="text" name = "search"> <input type="submit" value="Submit">
+    </form>
+    <br>
+    {% for task in tasks %} {{forloop.counter}}. {{task.title}} - {{task.created_date}}
+    <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
+    <a style = "text-decoration: none;" href = "/complete_task/{{task.id}}/">&#9989;</a><br>
+    {% endfor %}
+    <br>
+    Pages: {% for page in paginator.page_range %} <a href="?page={{page}}&search={{request.GET.search}}">{{page}}</a>{% endfor %}
+    <br>
+    <a href="/completed_tasks">View Completed Tasks</a>
+    <br>
+    <a href="/all_tasks">View All</a>
+</body>
+</html>
