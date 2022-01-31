@@ -10,6 +10,7 @@
     <h1>Completed Tasks</h1>
     <br>
     {% for task in completed %} {{forloop.counter}}. {{task}}
+    <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
     <br>
     {% endfor %}
     {% if not avaialable %}

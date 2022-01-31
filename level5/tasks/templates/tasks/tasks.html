@@ -13,9 +13,14 @@
         <input type="text" name = "task"> <input type="submit" value="Submit">
     </form>
     <br>
-    {% for task in tasks %} {{forloop.counter}}. {{task}}
-    <button><a style = "text-decoration: none;" href = "/delete-task/{{forloop.counter}}/">Delete Task</a></button>
-    <button><a style = "text-decoration: none;" href = "/complete_task/{{forloop.counter}}/">Mark as Complete</a></button> <br>
+    <h3>Search for a particular task:</h3>
+    <form method="get" action = "/tasks/"/>
+        <input type="text" name = "search"> <input type="submit" value="Submit">
+    </form>
+    <br>
+    {% for task in tasks %} {{forloop.counter}}. {{task.title}} - {{task.created_date}}
+    <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
+    <a style = "text-decoration: none;" href = "/complete_task/{{task.id}}/">&#9989;</a><br>
     {% endfor %}
 
     <br>
