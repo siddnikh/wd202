@@ -7,7 +7,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm #remmeber to update the settings.py file for login url, etc.
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .utils import AuthenticationManager, TaskCreateForm
+from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin
 
 class UserLoginView(LoginView):
     template_name = 'tasks/user_login.html'
@@ -41,7 +41,7 @@ class GenericTaskUpdateView(AuthenticationManager, UpdateView, LoginRequiredMixi
     template_name = 'tasks/update_task.html'
     success_url = '/tasks'
 
-class GenericTaskCreateView(CreateView, LoginRequiredMixin):
+class GenericTaskCreateView(PassRequestToFormViewMixin, CreateView, LoginRequiredMixin):
     form_class = TaskCreateForm
     template_name = 'tasks/create_task.html'
     success_url = '/tasks/'
@@ -53,7 +53,7 @@ class GenericTaskCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 class GenericTaskView(AuthenticationManager, ListView, LoginRequiredMixin):
-    queryset = Task.objects.filter(completed = False, deleted = False)
+    queryset = Task.objects.filter(completed = False, deleted = False).order_by('priority')
     template_name = "tasks/tasks.html"
     context_object_name = "tasks"
     paginate_by = 5
@@ -61,9 +61,9 @@ class GenericTaskView(AuthenticationManager, ListView, LoginRequiredMixin):
     def get_queryset(self):
         search_term = self.request.GET.get("search")
         if search_term:
-            tasks = Task.objects.filter(title__icontains = search_term)
+            tasks = Task.objects.filter(title__icontains = search_term).order_by('priority')
         else:
-            tasks = Task.objects.filter(completed = False, deleted = False)
+            tasks = Task.objects.filter(completed = False, deleted = False).order_by('priority')
         return tasks
  
 class GenericTaskCompleteView(AuthenticationManager, DeleteView, LoginRequiredMixin):
@@ -86,10 +86,15 @@ class GenericCompletedTasksView(AuthenticationManager, ListView, LoginRequiredMi
     context_object_name = "tasks"
 
     def get_queryset(self):
-        tasks = Task.objects.filter(completed = True, deleted = False, user = self.request.user)
+        tasks = Task.objects.filter(completed = True, deleted = False, user = self.request.user).order_by('priority')
         return tasks
 
 class GenericAllTasksView(AuthenticationManager, ListView, LoginRequiredMixin):
-    queryset = Task.objects.filter(deleted = False)
+    
+    queryset = None
     template_name = "tasks/all_tasks.html"
     context_object_name = "tasks"
+
+    def get_queryset(self):
+        tasks = Task.objects.filter(deleted = False, user = self.request.user).order_by('priority')
+        return tasks

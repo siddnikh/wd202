@@ -16,7 +16,7 @@
         <input type="text" name = "search"> <input type="submit" value="Submit">
     </form>
     <br>
-    {% for task in tasks %} {{forloop.counter}}. {{task.title}} - {{task.created_date}}
+    {% for task in tasks %} {{forloop.counter}}. {{task.title}} [{{task.priority}}] - {{task.created_date}} 
     <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
     <a style = "text-decoration: none;" href = "/update-task/{{task.id}}/">Update</a>
     <a style = "text-decoration: none;" href = "/complete_task/{{task.id}}/">&#9989;</a>

@@ -10,12 +10,12 @@
     <h1>Pending Tasks:</h1>
     <br>
     {% for task in tasks %}
-    {% if not task.completed %} {{forloop.counter}}. {{task}} <br> 
+    {% if not task.completed %} {{forloop.counter}}. {{task}} [{{task.priority}}] <br> 
     {% endif %}
     {% endfor %}
     <h1>Completed Tasks:</h1>
     {% for task in tasks %} 
-    {% if task.completed %}{{forloop.counter}}. {{task}} <br>
+    {% if task.completed %}{{forloop.counter}}. {{task}} [{{task.priority}}] <br>
     {% endif %}
     {% endfor %}
     <br>

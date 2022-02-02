@@ -1,3 +1,4 @@
+from turtle import Turtle
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -8,9 +9,14 @@ class Task(models.Model):
     created_date = models.DateTimeField(auto_now = True)
     deleted = models.BooleanField(default = False)
     user = models.ForeignKey(User, on_delete = models.CASCADE, null = True, blank = True)
+    priority = models.IntegerField(unique = False, null = False, blank = False)
 
     def delete(self):
         self.deleted = True
+        self.save()
+    
+    def increase_priority(self):
+        self.priority += 1
         self.save()
 
     def __str__(self):

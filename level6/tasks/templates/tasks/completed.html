@@ -9,7 +9,7 @@
 <body>
     <h1>Completed Tasks</h1>
     <br>
-    {% for task in tasks %} {{forloop.counter}}. {{task}}
+    {% for task in tasks %} {{forloop.counter}}. {{task}} - [{{task.priority}}]
     <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
     <br>
     {% endfor %}
