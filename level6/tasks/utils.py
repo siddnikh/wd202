@@ -33,8 +33,8 @@ class TaskCreateForm(ModelForm):
 
     def clean_priority(self):
         priority = self.cleaned_data['priority']
-        t = Task.objects.filter(priority = priority, user = self.request.user, deleted = False).first()
-        if t is not None:
+        t = Task.objects.filter(priority = priority, user = self.request.user, deleted = False).exists()
+        if t:
             cascading_tasks(priority, self.request.user)    
         return priority
 
