@@ -9,14 +9,18 @@
 <body>
     <h1>Pending Tasks:</h1>
     <br>
-    {% for task in pending %} {{forloop.counter}}. {{task}}
-    <br>
+    {% for task in tasks %}
+    {% if not task.completed %} {{forloop.counter}}. {{task}} <br> 
+    {% endif %}
     {% endfor %}
     <h1>Completed Tasks:</h1>
-    {% for task in completed %} {{forloop.counter}}. {{task}}
-    <br>
+    {% for task in tasks %} 
+    {% if task.completed %}{{forloop.counter}}. {{task}} <br>
+    {% endif %}
     {% endfor %}
     <br>
     <a href="/tasks">Return to viewing or adding tasks</a>
+    <br>
+    <p>Want to <a href = "/user/logout/">logout</a>?
 </body>
 </html>

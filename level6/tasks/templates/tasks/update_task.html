@@ -1,0 +1,14 @@
+<h1>Update a Task:</h1>
+
+<form method="POST" action = ""/>
+{{ form.as_p }}
+{% csrf_token %}
+<button type="submit">Submit</button>
+</form>
+<br>
+
+<a href="/tasks">Back to homepage</a> <br>
+<a href="/all_tasks">View All tasks</a> <br>
+<a href="/completed_tasks">View Completed Tasks</a>
+<br>
+    <p>Want to <a href = "/user/logout/">logout</a>?

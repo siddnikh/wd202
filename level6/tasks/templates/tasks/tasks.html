@@ -8,11 +8,8 @@
 </head>
 <body>
     <h1>Tasks</h1>
-    <h4>Add Task:</h4>
-    <form method="POST" action = "/add-task"/>
-        <input type="text" name = "task"> <input type="submit" value="Submit">
-        {% csrf_token %}
-    </form>
+
+    Add Task: <a href="/create-task/">here</a>
     <br>
     <h3>Search for a particular task:</h3>
     <form method="get" action = "/tasks/"/>
@@ -21,7 +18,9 @@
     <br>
     {% for task in tasks %} {{forloop.counter}}. {{task.title}} - {{task.created_date}}
     <a style = "text-decoration: none;" href = "/delete-task/{{task.id}}/">&#10060;</a>
-    <a style = "text-decoration: none;" href = "/complete_task/{{task.id}}/">&#9989;</a><br>
+    <a style = "text-decoration: none;" href = "/update-task/{{task.id}}/">Update</a>
+    <a style = "text-decoration: none;" href = "/complete_task/{{task.id}}/">&#9989;</a>
+    <a style = "text-decoration: none;" href = "/detailed-task/{{task.id}}/">View Details</a><br>
     {% endfor %}
     <br>
     Pages: {% for page in paginator.page_range %} <a href="?page={{page}}&search={{request.GET.search}}">{{page}}</a>{% endfor %}
@@ -29,5 +28,7 @@
     <a href="/completed_tasks">View Completed Tasks</a>
     <br>
     <a href="/all_tasks">View All</a>
+    <br>
+    <p>Want to <a href = "/user/logout/">logout</a>?
 </body>
 </html>
