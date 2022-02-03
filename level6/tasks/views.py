@@ -19,10 +19,6 @@ class UserCreationView(CreateView):
     template_name = "tasks/user_signup.html"
     success_url = '/user/login/'
 
-#class GenericDetailView(AuthenticationManager, DetailView, LoginRequiredMixin):
-#    model = Task
-#    template_name = "tasks/task_detail.html"
-
 class GenericTaskDeleteView(AuthenticationManager, DeleteView, LoginRequiredMixin):
 
     model = Task
