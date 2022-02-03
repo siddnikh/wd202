@@ -4,10 +4,10 @@ from .models import Task
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
-from django.contrib.auth.forms import UserCreationForm #remmeber to update the settings.py file for login url, etc.
+#remmeber to update the settings.py file for login url, etc.
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin, UserLoginForm
+from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin, UserLoginForm, UserSignUpForm
 
 class UserLoginView(LoginView):
     form_class = UserLoginForm
@@ -15,13 +15,13 @@ class UserLoginView(LoginView):
     success_url = '/tasks/'
 
 class UserCreationView(CreateView):
-    form_class = UserCreationForm
+    form_class = UserSignUpForm
     template_name = "tasks/user_signup.html"
     success_url = '/user/login/'
 
-class GenericDetailView(AuthenticationManager, DetailView, LoginRequiredMixin):
-    model = Task
-    template_name = "tasks/task_detail.html"
+#class GenericDetailView(AuthenticationManager, DetailView, LoginRequiredMixin):
+#    model = Task
+#    template_name = "tasks/task_detail.html"
 
 class GenericTaskDeleteView(AuthenticationManager, DeleteView, LoginRequiredMixin):
 
@@ -36,7 +36,7 @@ class GenericTaskDeleteView(AuthenticationManager, DeleteView, LoginRequiredMixi
         self.object.save()
         return redirect(success_url)
 
-class GenericTaskUpdateView(AuthenticationManager, UpdateView, LoginRequiredMixin):
+class GenericTaskUpdateView(PassRequestToFormViewMixin, AuthenticationManager, UpdateView, LoginRequiredMixin):
     model = Task
     form_class = TaskCreateForm
     template_name = 'tasks/update_task.html'
@@ -66,19 +66,6 @@ class GenericTaskView(AuthenticationManager, ListView, LoginRequiredMixin):
         else:
             tasks = Task.objects.filter(completed = False, deleted = False).order_by('priority')
         return tasks
- 
-class GenericTaskCompleteView(AuthenticationManager, DeleteView, LoginRequiredMixin):
-
-    model = Task
-    template_name = 'tasks/complete_task.html'
-    success_url = '/tasks/'
-
-    #Manipulating DeleteView functions to make this work.
-    def form_valid(self, form):
-        success_url = self.get_success_url()
-        self.object.completed = True
-        self.object.save()
-        return redirect(success_url)
 
 class GenericCompletedTasksView(AuthenticationManager, ListView, LoginRequiredMixin):
 

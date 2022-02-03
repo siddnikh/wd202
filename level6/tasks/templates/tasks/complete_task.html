@@ -1,8 +1,0 @@
-<h1>Complete Task:</h1>
-
-<form method="post">{% csrf_token %}
-    <p>Are you sure you want to nark "{{ object }}" as complete?</p>
-    <input type="submit" value="Confirm">
-</form>
-<br>
-    <p>Want to <a href = "/user/logout/">logout</a>?

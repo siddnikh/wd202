@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <div class = "flex h-screen justify-center items-center bg-white">
+        <div class="h-5/6 w-1/3 bg-white">
+            <a href = "/user/logout" class = "text-red-600 hover:text-red-700 float-right font-sans font-light mt-4 text-2xl">Log out</a>
+            <h1 style = "display: inline-block" class = "font-sans text-5xl font-bold">Hi {{user.username}}</h1>
+            <div class = "mt-20 flex justify-evenly">
+            {% block buttons %}
+            <!--Put the buttons here-->
+            {% endblock %}
+            </div>
+
+        {% block body %}
+        <!--Add the tasks here-->
+        {% endblock %}
+
+        <div class = "absolute w-1/3 bottom-0 mt-5 grid place-items-center">
+            <button onclick="window.location.href = '/create-task/'" class="bg-red-500 hover:bg-red-700 text-white text-3xl mb-40 py-2 px-4 rounded-2xl mt-5 h-20 w-full">Add</button>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,8 +1,11 @@
-<h1>Delete Task:</h1>
-
-<form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
+{% extends "layouts/layout.html" %}
+{% block title %}Delete Task Confirmation{% endblock %}
+{% block heading %}Delete Task{% endblock %}
+{% block body %}
+<form class = "mt-14" method="post">{% csrf_token %}
+    <p class = "font-sans text-black text-xl">Are you sure you want to delete <span class="text-blue-500">{{object}}</span>?</p>
+    <div class = "absolute w-1/3 bottom-0 mt-5 grid place-items-center">
+        <button type = "submit" class="bg-red-500 hover:bg-red-700 text-white text-3xl mb-40 py-2 px-4 rounded-2xl mt-5 h-20 w-full">Confirm</button>
+    </div>
 </form>
-<br>
-    <p>Want to <a href = "/user/logout/">logout</a>?
+{% endblock%}
