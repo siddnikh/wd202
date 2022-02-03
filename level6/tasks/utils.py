@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, ValidationError, CharField, PasswordInput, TextInput
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
+from django.utils.translation import gettext, gettext_lazy as _
 
 def cascading_tasks(priority, user):
     
@@ -24,6 +26,14 @@ class PassRequestToFormViewMixin:
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+class UserLoginForm(AuthenticationForm):
+    username = UsernameField(widget=TextInput(attrs={'autofocus': True, 'class': 'bg-gray-100 h-20 appearance-none rounded-xl my-6 w-full py-2 px-4 text-black leading-tight'}))
+    password = CharField(
+        label=_("Password"),
+        strip=False,
+        widget=PasswordInput(attrs={'autocomplete': 'current-password', 'class': 'bg-gray-100 h-20 appearance-none rounded-xl my-6 w-full py-2 px-4 text-black leading-tight'}),
+    )
 
 class TaskCreateForm(ModelForm):
 

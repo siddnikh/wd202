@@ -7,9 +7,10 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm #remmeber to update the settings.py file for login url, etc.
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin
+from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin, UserLoginForm
 
 class UserLoginView(LoginView):
+    form_class = UserLoginForm
     template_name = 'tasks/user_login.html'
     success_url = '/tasks/'
 
