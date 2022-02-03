@@ -18,6 +18,9 @@ class Task(models.Model):
     def increase_priority(self):
         self.priority += 1
         self.save()
+    
+    def pretty_date(self):
+        return self.created_date.strftime("%a %d %b")
 
     def __str__(self):
         return self.title
