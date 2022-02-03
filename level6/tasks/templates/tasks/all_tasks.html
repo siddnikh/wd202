@@ -24,7 +24,7 @@
         {% else %}
             <p class = "text-black font-sans text-lg">{{task.title}}</p>
         {% endif %}
-        <p class = "text-gray-400 font-sans text-base">{{task.created_date}}</p>
+        <p class = "text-gray-400 font-sans text-base">{{task.created_date.date}}</p>
     </div>
     <div style="display: inline-block" class = "float-right">
         <a href = "/update-task/{{task.id}}/">
