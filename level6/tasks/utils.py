@@ -8,7 +8,7 @@ from django.contrib.auth import password_validation, models
 def cascading_tasks(priority, user):
     '''Returns a list of objects whose priority is to be increased by 1 when cascading tasks.'''
     objs = []
-    t = Task.objects.filter(priority = priority, user = user, completed = False, deleted = False).first()
+    t = Task.objects.select_for_update().filter(priority = priority, user = user, completed = False, deleted = False).first()
     if t is not None:
         objs.append(t)
         for obj in cascading_tasks(priority + 1, user): objs.append(obj)
@@ -17,11 +17,7 @@ def cascading_tasks(priority, user):
 class AuthenticationManager(LoginRequiredMixin):
 
     def get_queryset(self):
-        search_term = self.request.GET.get("search")
-        if search_term:
-            tasks = Task.objects.filter(title__icontains = search_term)
-        else:
-            tasks = Task.objects.filter(deleted = False, user = self.request.user)
+        tasks = Task.objects.filter(deleted = False, user = self.request.user)
         return tasks
 
 class PassRequestToFormViewMixin:
