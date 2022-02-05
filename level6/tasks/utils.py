@@ -6,11 +6,13 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth import password_validation, models
 
 def cascading_tasks(priority, user):
-    
-    t = Task.objects.filter(priority = priority, user = user, deleted = False).first()
+    '''Returns a list of objects whose priority is to be increased by 1 when cascading tasks.'''
+    objs = []
+    t = Task.objects.filter(priority = priority, user = user, completed = False, deleted = False).first()
     if t is not None:
-        cascading_tasks(priority + 1, user)
-        t.increase_priority()
+        objs.append(t)
+        for obj in cascading_tasks(priority + 1, user): objs.append(obj)
+    return objs
 
 class AuthenticationManager(LoginRequiredMixin):
 
@@ -96,9 +98,6 @@ class TaskCreateForm(ModelForm):
         priority = self.cleaned_data['priority']
         if(priority <= 0):
             raise ValidationError("Priority has to be larger than 0.")
-        t = Task.objects.filter(priority = priority, user = self.request.user, deleted = False).exists()
-        if t:
-            cascading_tasks(priority, self.request.user)    
         return priority
 
     def clean_title(self):
@@ -107,6 +106,10 @@ class TaskCreateForm(ModelForm):
             raise ValidationError("Title should be longer than 10 characters.")
         return title
     
+    def clean_user(self):
+        user = self.request.user
+        return user 
+
     class Meta:
         model = Task
         fields = ['title', 'priority', 'description', 'completed']
