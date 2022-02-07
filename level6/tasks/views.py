@@ -45,11 +45,18 @@ class GenericTaskCreateView(PassRequestToFormViewMixin, CreateView, LoginRequire
         """If the form is valid, save the associated model."""
         self.object = form.save()
         self.object.user = self.request.user
-        t = Task.objects.filter(priority = self.object.priority, user = self.request.user, completed = False, deleted = False).exists()
-        if t is not None:
-            objs = cascading_tasks(self.object.priority, self.request.user)
-            for obj in objs:
-                obj.priority += 1
+        p = self.object.priority
+        # if t exists (there exists a task with the same priority as the form)
+        t = Task.objects.filter(priority = p, user = self.request.user, completed = False, deleted = False).exists()
+        objs = []
+        while t is not None:
+            t.priority += 1
+            objs.append(t)
+            p += 1
+            #since we're going to upgrade every task's priority with one, we check if there's another one with the same priority as the new updated one.
+            t = Task.objects.filter(priority = p, user = self.request.user, completed = False, deleted = False)
+        
+        if len(objs) > 1:
             Task.objects.bulk_update(objs, ['priority'])
         return super().form_valid(form)
 
