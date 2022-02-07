@@ -5,7 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 #remmeber to update the settings.py file for login url, etc.
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin, UserLoginForm, UserSignUpForm, cascading_tasks
+from .utils import AuthenticationManager, TaskCreateForm, PassRequestToFormViewMixin, UserLoginForm, UserSignUpForm
+from django.db import transaction
 
 class UserLoginView(LoginView):
     form_class = UserLoginForm
@@ -46,18 +47,19 @@ class GenericTaskCreateView(PassRequestToFormViewMixin, CreateView, LoginRequire
         self.object = form.save()
         self.object.user = self.request.user
         p = self.object.priority
-        # if t exists (there exists a task with the same priority as the form)
-        t = Task.objects.filter(priority = p, user = self.request.user, completed = False, deleted = False).exists()
-        objs = []
-        while t is not None:
-            t.priority += 1
-            objs.append(t)
+        tasks_to_update = []
+        task = None
+        try: task = Task.objects.get(priority = p, user = self.request.user, completed = False, deleted = False)
+        except: pass
+        while task is not None:
+            tasks_to_update.append(task)
             p += 1
-            #since we're going to upgrade every task's priority with one, we check if there's another one with the same priority as the new updated one.
-            t = Task.objects.filter(priority = p, user = self.request.user, completed = False, deleted = False)
-        
-        if len(objs) > 1:
-            Task.objects.bulk_update(objs, ['priority'])
+            try: task = Task.objects.get(priority = p, user = self.request.user, completed = False, deleted = False)
+            except: task = None
+        if len(tasks_to_update) > 0:
+            for task_to_update in tasks_to_update:
+                task_to_update.priority += 1
+            Task.objects.bulk_update(tasks_to_update, ['priority'])
         return super().form_valid(form)
 
 class GenericTaskView(AuthenticationManager, ListView, LoginRequiredMixin):
