@@ -1,0 +1,31 @@
+{% extends "layouts/layout.html" %}
+{% block title %}Create Task{% endblock %}
+{% block heading %}Create Task{% endblock %}
+{% block body %}
+<form class = "mt-14"action="" method = 'POST'>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="fieldwrapper">
+        {{ form.title.errors }}
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.title.id_for_label }}">Title</label>
+        {{form.title}}
+    </div>
+    <div class="fieldwrapper">
+        {{ form.description.errors }}
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.description.id_for_label }}">Description</label>
+        {{form.description}}
+    </div>
+    <div class="fieldwrapper">
+        {{ form.priority.errors }}
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.priority.id_for_label }}">Priority</label>
+        {{form.priority}}
+    </div>
+    <div class="fieldwrapper">
+        {{form.completed}}
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.completed.id_for_label }}">Completed</label>
+    </div>
+    <div class = "grid place-items-center">
+        <button type = "submit" class="mt-10 bg-red-500 hover:bg-red-700 text-white text-3xl py-2 px-4 rounded-2xl h-20 w-full">Add Task</button>
+    </div>
+</form>
+{% endblock%}

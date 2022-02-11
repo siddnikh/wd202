@@ -1,0 +1,35 @@
+{% extends "layouts/layout.html" %}
+{% block title %}Signup - Todo Manager{% endblock %}
+{% block heading %}Todo Manager{% endblock %}
+{% block subheading %}Signup{% endblock %}
+{% block body %}
+<p class="mt-10 text-black text-lg font-sans">Already have an account? <a href = "/user/login/" class = "text-red-500">Login</a></p>
+<form class = "mt-14"action="" method = 'POST'>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="fieldwrapper">
+        <ul class = "bg-red-100 text-red-500">{{form.username.errors}}</ul>
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.username.id_for_label }}">Username</label>
+        {{form.username}}
+        <p class = "text-sm font-normal text-slate-400">{{form.username.help_text}}</p>
+        <br>
+    </div>
+    <div class="fieldwrapper">
+        <ul class = "bg-red-100 text-red-500">{{form.password1.errors}}</ul>
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.password1.id_for_label }}">Password</label>
+        {{form.password1}}
+        <ul style = "list-style-type: disc" class = "text-sm font-normal text-slate-400">{{form.password1.help_text}}</ul>
+        <br>
+    </div>
+    <div class="fieldwrapper">
+        <ul class = "bg-red-100 text-red-500">{{form.password2.errors}}</ul>
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+        {{form.password2}}
+        <p class = "text-sm font-normal text-slate-400">{{form.password2.help_text}}</p>
+        <br>
+    </div>
+    <div class = "grid place-items-center">
+        <button class="bg-red-500 hover:bg-red-700 text-white text-3xl mb-40 py-2 px-4 rounded-2xl mt-5 h-20 w-full">Signup</button>
+    </div>
+</form>
+{% endblock%}
