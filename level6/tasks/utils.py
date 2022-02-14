@@ -5,6 +5,35 @@ from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCre
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth import password_validation, models
 
+class TaskCascadeMixin:
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        self.object.user = self.request.user
+        # during task creation
+        if self.object.status == 'COMPLETED': self.object.completed = True
+        else: self.object.completed = False
+        # Cascading logic
+        p = self.object.priority
+        tasks_to_update = []
+        task = Task.objects.filter(priority = p,
+                                    user = self.request.user,
+                                    completed = False,
+                                    deleted = False).first()
+        while task is not None:
+            tasks_to_update.append(task)
+            p += 1
+            task = Task.objects.filter(priority = p,
+                                        user = self.request.user,
+                                        completed = False,
+                                        deleted = False).first()
+        if len(tasks_to_update) > 0:
+            for task_to_update in tasks_to_update:
+                task_to_update.priority += 1
+            Task.objects.bulk_update(tasks_to_update, ['priority'])
+        return super().form_valid(form)
+
 class AuthenticationManager(LoginRequiredMixin):
 
     def get_queryset(self):

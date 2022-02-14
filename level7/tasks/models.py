@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 STATUS_CHOICES = (
     ("PENDING", "PENDING"),
@@ -31,3 +32,15 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+class History(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null = False, blank = False)
+    prev = models.ForeignKey('self', on_delete = models.CASCADE, related_name='prev_update')
+    created = models.DateTimeField(editable = False)
+    next = models.ForeignKey('self', on_delete=models.CASCADE, related_name='next_update')
+
+    def save(self, *args, **kwargs):
+        # checks if the object has been created or not
+        if not self.id:
+            self.created = timezone.now()
+        return super(History, self).save(*args, **kwargs)

@@ -5,14 +5,16 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter, ChoiceFilter
+from .models import STATUS_CHOICES
 
 class TaskFilter(FilterSet):
     title = CharFilter(lookup_expr="icontains")
+    status = ChoiceFilter(choices = STATUS_CHOICES)
 
 class TaskSerializer(ModelSerializer):
     class Meta:
         model = Task
-        fields = ['title', 'description', 'completed']
+        fields = ['title', 'completed', 'status', 'priority']
 
 class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
