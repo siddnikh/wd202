@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Task
+from .models import Task, History
 from django.forms import ModelForm, ValidationError, CharField, PasswordInput, TextInput
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
 from django.utils.translation import gettext, gettext_lazy as _

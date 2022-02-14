@@ -2,11 +2,12 @@ from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
 from django.views.generic import RedirectView
-from tasks.apiviews import TaskViewSet
+from tasks.apiviews import TaskViewSet, HistoryViewSet
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
 router.register('api/task', TaskViewSet)
+router.register('api/history', HistoryViewSet)
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/tasks')),

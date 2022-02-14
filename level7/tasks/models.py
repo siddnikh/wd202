@@ -35,12 +35,12 @@ class Task(models.Model):
 
 class History(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null = False, blank = False)
-    prev = models.ForeignKey('self', on_delete = models.CASCADE, related_name='prev_update')
-    created = models.DateTimeField(editable = False)
-    next = models.ForeignKey('self', on_delete=models.CASCADE, related_name='next_update')
+    old_status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=True, blank=True, default=None)
+    new_status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=False, blank=False)
+    date_of_update = models.DateTimeField(editable = False)
 
     def save(self, *args, **kwargs):
         # checks if the object has been created or not
         if not self.id:
-            self.created = timezone.now()
+            self.date_of_update = timezone.now()
         return super(History, self).save(*args, **kwargs)
