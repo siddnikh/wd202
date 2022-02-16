@@ -1,13 +1,16 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LogoutView
 from django.views.generic import RedirectView
 from tasks.apiviews import TaskViewSet, HistoryViewSet
-from rest_framework.routers import SimpleRouter
+from rest_framework_nested.routers import SimpleRouter, NestedSimpleRouter
 
 router = SimpleRouter()
-router.register('api/task', TaskViewSet)
-router.register('api/history', HistoryViewSet)
+router.register(r'task', TaskViewSet)
+#router.register('api/history', HistoryViewSet)
+
+task_router = NestedSimpleRouter(router, r'task', lookup='task')
+task_router.register(r'history', HistoryViewSet, basename='task-history')
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/tasks')),
@@ -19,5 +22,7 @@ urlpatterns = [
     path("update-task/<pk>/", views.GenericTaskUpdateView.as_view()),
     path('user/signup/', views.UserCreationView.as_view()),
     path('user/login/', views.UserLoginView.as_view()),
-    path('user/logout/', LogoutView.as_view())
-] + router.urls
+    path('user/logout/', LogoutView.as_view()),
+    path(r'', include(router.urls)),
+    path(r'', include(task_router.urls))
+]
