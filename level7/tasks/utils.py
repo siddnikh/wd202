@@ -22,6 +22,8 @@ class TaskCascadeMixin:
                                     completed = False,
                                     deleted = False).first()
         while task is not None:
+            if task == self.object:
+                break
             tasks_to_update.append(task)
             p += 1
             task = Task.objects.filter(priority = p,

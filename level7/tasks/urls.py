@@ -7,7 +7,7 @@ from rest_framework_nested.routers import SimpleRouter, NestedSimpleRouter
 
 router = SimpleRouter()
 router.register(r'task', TaskViewSet)
-#router.register('api/history', HistoryViewSet)
+#router.register('api/history', HistoryViewSet, basename="babushla")
 
 task_router = NestedSimpleRouter(router, r'task', lookup='task')
 task_router.register(r'history', HistoryViewSet, basename='task-history')

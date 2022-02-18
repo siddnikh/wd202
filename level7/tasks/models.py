@@ -34,6 +34,7 @@ class Task(models.Model):
         return self.title
 
 class History(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null = False, blank = False)
     old_status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=True, blank=True, default=None)
     new_status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=False, blank=False)
