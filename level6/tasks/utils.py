@@ -1,3 +1,4 @@
+from queue import PriorityQueue
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task
 from django.forms import ModelForm, ValidationError, CharField, PasswordInput, TextInput
@@ -8,30 +9,33 @@ from django.contrib.auth import password_validation, models
 class TaskCascadeMixin:
 
     def form_valid(self, form):
-        """If the form is valid, save the associated model."""
         self.object = form.save()
         self.object.user = self.request.user
-        # during task creation
-        if self.object.status == 'COMPLETED': self.object.completed = True
-        else: self.object.completed = False
-        # Cascading logic
         p = self.object.priority
-        tasks_to_update = []
-        task = Task.objects.filter(priority = p,
-                                    user = self.request.user,
-                                    completed = False,
-                                    deleted = False).first()
-        while task is not None:
-            tasks_to_update.append(task)
-            p += 1
-            task = Task.objects.filter(priority = p,
-                                        user = self.request.user,
-                                        completed = False,
-                                        deleted = False).first()
-        if len(tasks_to_update) > 0:
-            for task_to_update in tasks_to_update:
-                task_to_update.priority += 1
-            Task.objects.bulk_update(tasks_to_update, ['priority'])
+        print(self.object.title)
+        task = Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority=p).exists()
+        #New task to non-collision p value, updating task to non-collision p value
+        if task is None:
+            return super().form_valid(form)
+            
+        tasks = list(Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority__gte=p).order_by('priority'))
+        if len(tasks) == 0:
+            return super().form_valid(form)
+
+        # Cascading logic
+        tasks.remove(self.object)
+        print(f'tasks are {tasks}')
+        p = p - 1
+        count = 0
+        for task in tasks:
+            if task.priority == p + 1:
+                task.priority += 1
+                count += 1
+                p += 1
+            else:
+                break
+        tasks_to_update = tasks[:count]
+        Task.objects.bulk_update(tasks_to_update, ['priority'])
         return super().form_valid(form)
 
 class AuthenticationManager(LoginRequiredMixin):
