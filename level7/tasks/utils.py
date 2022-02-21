@@ -10,30 +10,24 @@ class TaskCascadeMixin:
     def form_valid(self, form):
         self.object = form.save()
         self.object.user = self.request.user
+        if self.object.status == 'COMPLETED': self.object.completed = True
         p = self.object.priority
-        print(self.object.title)
-        task = Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority=p).exists()
+        task = Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority=p).first()
         #New task to non-collision p value, updating task to non-collision p value
-        if task is None:
+        if task is None or task == self.object:
             return super().form_valid(form)
-            
-        tasks = list(Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority__gte=p).order_by('priority'))
-        if len(tasks) == 0:
-            return super().form_valid(form)
-
+        
         # Cascading logic
-        tasks.remove(self.object)
-        print(f'tasks are {tasks}')
-        p = p - 1
-        count = 0
-        for task in tasks:
-            if task.priority == p + 1:
-                task.priority += 1
-                count += 1
-                p += 1
-            else:
-                break
-        tasks_to_update = tasks[:count]
+        task.priority += 1
+        tasks_to_update = []
+        tasks_to_update.append(task)
+        p += 1
+        task = Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority=p).first()
+        while task is not None:
+            task.priority += 1
+            tasks_to_update.append(task)
+            p += 1
+            task = Task.objects.filter(user=self.request.user, completed=False, deleted=False, priority=p).first()
         Task.objects.bulk_update(tasks_to_update, ['priority'])
         return super().form_valid(form)
 

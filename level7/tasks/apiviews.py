@@ -49,4 +49,4 @@ class HistoryViewSet(ReadOnlyModelViewSet):
     filterset_class = HistoryFilter
 
     def get_queryset(self):
-        return History.objects.filter(user = self.request.user, task=self.kwargs['task_pk'])
+        return History.objects.filter(task__user = self.request.user, task=self.kwargs['task_pk'])

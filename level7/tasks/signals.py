@@ -11,8 +11,8 @@ def update_history(sender, instance, **kwargs):
         pass
     # When there is a new task created
     elif h is None:
-        History.objects.create(user=instance.user, task=instance, old_status=None, new_status=instance.status)
+        History.objects.create(task=instance, old_status=None, new_status=instance.status)
     # When a task's status is updated
     else:
         history_queryset = History.objects.filter(task = instance)
-        History.objects.create(user=instance.user, task=instance, old_status=history_queryset[history_queryset.count() - 1].new_status, new_status=instance.status)
+        History.objects.create(task=instance, old_status=h.new_status, new_status=instance.status)
