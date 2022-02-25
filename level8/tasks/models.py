@@ -2,7 +2,7 @@ from time import time
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, date, time
 
 STATUS_CHOICES = (
     ("PENDING", "PENDING"),
@@ -50,6 +50,12 @@ class History(models.Model):
 class Report(models.Model):
     time = models.TimeField(auto_now=False, auto_now_add=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    last_sent = models.DateTimeField(auto_now=False, auto_now_add=False) #stores the datetime report was sent last
+    #initial value for last_sent is set as the datetime for the previous day at the 'time' time.
+
+    def set_last_sent(self, dt):
+        self.last_sent = dt
+        self.save()
 
     def update(self, time):
         self.time = time

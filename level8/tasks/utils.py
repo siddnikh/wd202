@@ -1,6 +1,8 @@
 from urllib import request
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponseRedirect
+from datetime import datetime, date
+from django.utils import timezone
 from .models import Task, Report
 from django.forms import ModelForm, ValidationError, CharField, PasswordInput, TextInput, EmailField
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
@@ -148,7 +150,9 @@ class ReportForm(ModelForm):
         if commit:
             # If committing, save the instance and the m2m data immediately.
             self.instance.user = self.request.user
-            self.instance.last_sent = self.instance.time
+            today = timezone.localdate()
+            dt = date(today.year, today.month, today.day - 1)
+            self.instance.last_sent = datetime.combine(dt, self.instance.time)
             self.instance.save()
             self._save_m2m()
         else:

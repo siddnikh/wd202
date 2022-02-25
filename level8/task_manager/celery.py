@@ -13,7 +13,7 @@ app.conf.timezone = 'Asia/Kolkata'
 
 app.conf.beat_schedule = {
     'send_unsent_reports': {
-        'task': 'check_unsent_reports',
+        'task': 'send_unsent_reports',
         'schedule': 60.0,
     }
 }
