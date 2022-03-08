@@ -1,0 +1,2 @@
+web: gunicorn task_manager.wsgi
+celery: celery -A task_manager worker -l info -B

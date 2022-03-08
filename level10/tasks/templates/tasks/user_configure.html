@@ -1,0 +1,18 @@
+{% extends "layouts/layout.html" %}
+{% block title %}Add Report Configuration{% endblock %}
+{% block heading %}Add Report Configuration{% endblock %}
+{% block body %}
+<p class="mt-10 text-black text-lg font-sans">Add the time at which you want to receive an email of your reports. It should be in the format <span class="text-red-500">HH:MM (eg: 14:10)</span></p>
+<form class = "mt-14"action="" method = 'POST'>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="fieldwrapper">
+        {{ form.time.errors }}
+        <label class = "font-sans font-light mt-32 ml-1.5 text-2xl" for="{{ form.title.id_for_label }}">Time</label>
+        {{form.time}}
+    </div>
+    <div class = "grid place-items-center">
+        <button type = "submit" class="mt-10 bg-red-500 hover:bg-red-700 text-white text-3xl py-2 px-4 rounded-2xl h-20 w-full">Submit</button>
+    </div>
+</form>
+{% endblock%}
